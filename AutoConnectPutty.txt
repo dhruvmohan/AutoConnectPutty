@@ -1,0 +1,96 @@
+#######################################################################################################
+
+'Batch file to access the source code
+
+@echo off
+wscript "C:\Users\W485673\Desktop\Visual_Basic_Script.vbs"
+
+#######################################################################################################
+
+'VBS code
+
+xSSO=InputBox("Please enter you SSO" , "SSO")
+xPass=InputBox("Please enter your SSO password", "Password")
+
+
+Call openPutty("C:\PuTTY\putty.exe", "<<servername>>")
+Call typeText(xSSO)
+Call sendEnter()
+Call typeText(xPass)
+Call sendEnter()
+
+'Create your flow from here
+
+
+'Your Flow Ends here
+
+'******************************************************************************************************
+
+'WORKING PROCEDURES
+
+Public Sub openPutty(puttyPath, puttyServer)
+	Set Shell = CreateObject("WScript.Shell")
+	Shell.Run puttyPath & " " & puttyServer
+	Call Delay(2)
+End Sub
+
+Sub Delay(seconds)
+	Dim wshShell, strCmd
+	Set wshShell = CreateObject( "Wscript.Shell" )
+	strCmd = "%COMSPEC% /C (PING -n " & ( seconds + 1 ) & " 127.0.0.1 >NUL 2>&1 || PING -n " & seconds & " ::1 >NUL 2>&1)"
+	wshShell.Run strCmd, 0, 1
+	Set wshShell = Nothing
+End Sub
+
+
+Public Sub typeText(xText)
+	Set Shell = CreateObject("WScript.Shell")
+	Set WMI = GetObject("winmgmts:{impersonationLevel=impersonate}!\\.\root\cimv2")
+	wql = "SELECT ProcessId FROM Win32_Process WHERE Name = 'putty.exe'"
+	For Each process In WMI.ExecQuery(wql)
+		Shell.AppActivate process.ProcessId
+		Shell.Sendkeys xText
+	Next
+	Set Shell=Nothing
+	Set WMI=Nothing
+End Sub
+
+Public Sub sendEnter()
+	Set Shell = CreateObject("WScript.Shell")
+	Set WMI = GetObject("winmgmts:{impersonationLevel=impersonate}!\\.\root\cimv2")
+	wql = "SELECT ProcessId FROM Win32_Process WHERE Name = 'putty.exe'"
+	For Each process In WMI.ExecQuery(wql)
+		Shell.AppActivate process.ProcessId
+		Shell.Sendkeys "{ENTER}"
+	Next
+	Set Shell=Nothing
+	Set WMI=Nothing
+
+	Call Delay(2)
+End Sub
+
+Public Sub sendInsert()
+	Set Shell = CreateObject("WScript.Shell")
+	Set WMI = GetObject("winmgmts:{impersonationLevel=impersonate}!\\.\root\cimv2")
+	wql = "SELECT ProcessId FROM Win32_Process WHERE Name = 'putty.exe'"
+	For Each process In WMI.ExecQuery(wql)
+		Shell.AppActivate process.ProcessId
+		Shell.Sendkeys "{INSERT}"
+	Next
+	Set Shell=Nothing
+	Set WMI=Nothing
+End Sub
+
+Public Sub sendEsc()
+	Set Shell = CreateObject("WScript.Shell")
+	Set WMI = GetObject("winmgmts:{impersonationLevel=impersonate}!\\.\root\cimv2")
+	wql = "SELECT ProcessId FROM Win32_Process WHERE Name = 'putty.exe'"
+	For Each process In WMI.ExecQuery(wql)
+		Shell.AppActivate process.ProcessId
+		Shell.Sendkeys "{ESC}"
+	Next
+	Set Shell=Nothing
+	Set WMI=Nothing
+End Sub
+'*******************************************************************************************************
+
